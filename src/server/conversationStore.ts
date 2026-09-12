@@ -7,14 +7,14 @@ const conversationsDb = new Map<string, ChatSession>();
 const DEFAULT_WELCOME_SESSION: ChatSession = {
   id: 'conv_welcome_default',
   userId: 'default',
-  title: 'Welcome to Nyaay सारथी Legal Assistant',
+  title: 'Welcome to Nyaay Sarthi Legal Assistant',
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   messages: [
     {
       id: 'msg_welcome',
       sender: 'assistant',
-      text: 'Namaste! I am **Nyaay सारथी Assistant**, your dedicated legal-information guide for Indian citizens. \n\nI can explain Indian laws, legal procedures, rights under BNS/BNSS/BSA, consumer disputes, cyber frauds, tenancy issues, and how to access free legal aid through NALSA.\n\n*Please note: I provide general legal information, not formal legal advice. For case-specific legal counsel, consider consulting a verified advocate.*',
+      text: 'Namaste! I am **Nyaay Sarthi Assistant**, your dedicated legal-information guide for Indian citizens. \n\nI can explain Indian laws, legal procedures, rights under BNS/BNSS/BSA, consumer disputes, cyber frauds, tenancy issues, and how to access free legal aid through NALSA.\n\n*Please note: I provide general legal information, not formal legal advice. For case-specific legal counsel, consider consulting a verified advocate.*',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       isAiGenerated: true,
       suggestions: [

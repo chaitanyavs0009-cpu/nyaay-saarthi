@@ -51,13 +51,13 @@ export function CitizenDashboardPage({
               <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white border border-sky-100 p-0.5 shadow-sm overflow-hidden">
                 <img 
                   src={logoImg} 
-                  alt="Nyaay सारथी Logo" 
+                  alt="Nyaay Sarthi Logo" 
                   className="w-full h-full object-cover rounded-xl"
                   referrerPolicy="no-referrer"
                 />
               </div>
               <span className="text-base sm:text-lg tracking-tight text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
-                <span className="font-normal text-slate-800">Nyaay</span> <span className="text-sky-600 font-['Noto_Sans_Devanagari',sans-serif] font-bold">सारथी</span>
+                <span className="font-bold text-slate-900">Nyaay</span> <span className="text-blue-600 font-bold">Sarthi</span>
               </span>
             </div>
           </div>
@@ -460,7 +460,7 @@ export function CitizenDashboardPage({
 
       {/* Footer */}
       <footer className="py-4 text-center text-xs text-slate-500 border-t border-sky-100 bg-white/50 mt-12">
-        <p>© {new Date().getFullYear()} Nyaay सारथी. Citizen Legal Assistance & Advocate Network.</p>
+        <p>© {new Date().getFullYear()} Nyaay Sarthi. Citizen Legal Assistance & Advocate Network.</p>
       </footer>
 
     </div>

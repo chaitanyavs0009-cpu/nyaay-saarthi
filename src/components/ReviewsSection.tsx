@@ -129,7 +129,7 @@ export function ReviewsSection({ language, onActionClick }: ReviewsSectionProps)
                   <span>{currentReview.date}</span>
                   <span className="text-sky-700 font-semibold flex items-center gap-1">
                     <ShieldCheck className="w-3.5 h-3.5 text-sky-600" />
-                    {language === 'en' ? 'Resolved via Nyaay सारथी' : 'न्याय सारथी द्वारा समाधान'}
+                    {language === 'en' ? 'Resolved via Nyaay Sarthi' : 'न्याय सारथी द्वारा समाधान'}
                   </span>
                 </div>
               </div>

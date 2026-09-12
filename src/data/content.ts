@@ -6,7 +6,7 @@ export const HERO_CONTENT = {
     hi: "डिजिटल कानूनी सशक्तिकरण पहल",
   },
   headlineMain: {
-    en: "Nyaay सारथी",
+    en: "Nyaay Sarthi",
     hi: "न्याय सारथी",
   },
   headlineSub: {
@@ -14,11 +14,11 @@ export const HERO_CONTENT = {
     hi: "कानूनी स्पष्टता, नागरिक अधिकार और सत्यापित वकीलों के लिए आपका विश्वसनीय मार्गदर्शक",
   },
   description: {
-    en: "Nyaay सारथी bridges the gap between Indian citizens and the justice system. Get plain-language legal guidance powered by AI, understand constitutional and statutory rights, connect with verified advocates, and navigate official government grievance portals with complete confidence.",
+    en: "Nyaay Sarthi bridges the gap between Indian citizens and the justice system. Get plain-language legal guidance powered by AI, understand constitutional and statutory rights, connect with verified advocates, and navigate official government grievance portals with complete confidence.",
     hi: "न्याय सारथी भारतीय नागरिकों और न्याय व्यवस्था के बीच की दूरी को मिटाता है। सरल भाषा में कानूनी सहायता प्राप्त करें, अपने संवैधानिक अधिकारों को समझें, सत्यापित वकीलों से परामर्श करें और सरकारी पोर्टल्स तक बिना किसी झिझक के पहुंचें।",
   },
   whatIsItTitle: {
-    en: "What is Nyaay सारथी?",
+    en: "What is Nyaay Sarthi?",
     hi: "न्याय सारथी क्या है?",
   },
   whatIsItPoints: [
@@ -169,7 +169,7 @@ export const REVIEWS_DATA: ReviewItem[] = [
     rating: 5,
     topic: "Consumer Dispute & E-Daakhil",
     topicHi: "उपभोक्ता विवाद व ई-दाखिल",
-    comment: "I received defective commercial equipment and the seller refused a refund. Nyaay सारथी guided me through the E-Daakhil notice format within 10 minutes. The advocate helped me draft a notice and the company refunded the full ₹85,000.",
+    comment: "I received defective commercial equipment and the seller refused a refund. Nyaay Sarthi guided me through the E-Daakhil notice format within 10 minutes. The advocate helped me draft a notice and the company refunded the full ₹85,000.",
     commentHi: "मुझे दोषपूर्ण मशीनरी दी गई थी और विक्रेता ने पैसे लौटाने से मना कर दिया। न्याय सारथी ने मुझे 10 मिनट में ई-दाखिल प्रक्रिया समझाई और वकील की सलाह से पूरे ₹85,000 वापस मिल गए।",
     date: "August 2025",
   },
@@ -199,7 +199,7 @@ export const REVIEWS_DATA: ReviewItem[] = [
     rating: 5,
     topic: "Tenancy & Security Deposit Refund",
     topicHi: "किरायेदारी व सिक्योरिटी डिपॉजिट",
-    comment: "My landlord unlawfully held back my 2-month security deposit of ₹50,000 citing false wear-and-tear. An advocate on Nyaay सारथी provided a 20-minute consultation and drafted a polite statutory notice. The landlord transferred the deposit within 48 hours.",
+    comment: "My landlord unlawfully held back my 2-month security deposit of ₹50,000 citing false wear-and-tear. An advocate on Nyaay Sarthi provided a 20-minute consultation and drafted a polite statutory notice. The landlord transferred the deposit within 48 hours.",
     commentHi: "मकान मालिक ने ₹50,000 का सुरक्षा जमा बिना कारण रोक लिया था। न्याय सारथी पर एक वकील से 20 मिनट की बातचीत में सही कानूनी नोटिस तैयार हुआ और 48 घंटे में पैसे वापस मिले।",
     date: "June 2025",
   },
@@ -214,7 +214,7 @@ export const REVIEWS_DATA: ReviewItem[] = [
     rating: 5,
     topic: "NALSA Free Legal Aid",
     topicHi: "मुफ्त कानूनी सहायता (NALSA)",
-    comment: "A needy senior citizen in our locality needed assistance for ancestral property rights. Nyaay सारथी guided us on eligibility under Section 12 of LSA Act. We were assigned a dedicated legal aid advocate completely free of cost.",
+    comment: "A needy senior citizen in our locality needed assistance for ancestral property rights. Nyaay Sarthi guided us on eligibility under Section 12 of LSA Act. We were assigned a dedicated legal aid advocate completely free of cost.",
     commentHi: "हमारे मोहल्ले के एक बुजुर्ग को संपत्ति मामले में कानूनी मदद की जरूरत थी। न्याय सारथी ने धारा 12 के तहत मुफ्त विधिक सेवा की पात्रता स्पष्ट की और निःशुल्क वकील उपलब्ध हुआ।",
     date: "May 2025",
   },
@@ -241,7 +241,7 @@ export const FOOTER_PLATFORM_LINKS: FooterLink[] = [
     labelHi: "होम (मुख्य पृष्ठ)",
     actionKey: "home",
     category: "platform",
-    description: "Return to the main landing view of Nyaay सारथी.",
+    description: "Return to the main landing view of Nyaay Sarthi.",
     descriptionHi: "न्याय सारथी के मुख्य पृष्ठ पर वापस जाएं।",
   },
   {

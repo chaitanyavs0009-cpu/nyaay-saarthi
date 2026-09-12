@@ -226,7 +226,7 @@ export function KnowYourRightsPage({
                       className="py-2 px-3.5 rounded-xl bg-sky-50 text-sky-700 border border-sky-200 text-xs font-bold hover:bg-sky-100 flex items-center gap-1.5 cursor-pointer"
                     >
                       <Bot className="w-3.5 h-3.5 text-sky-600" />
-                      <span>{language === 'en' ? 'Ask Nyaay सारथी' : 'AI से इस पर पूछें'}</span>
+                      <span>{language === 'en' ? 'Ask Nyaay Sarthi' : 'AI से इस पर पूछें'}</span>
                     </button>
 
                     {r.advocateCategoryHint && (

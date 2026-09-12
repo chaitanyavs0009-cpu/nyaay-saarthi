@@ -70,7 +70,7 @@ export function CitizenHomePage({
 
           <p className="text-base sm:text-lg text-sky-950 font-semibold">
             {language === 'en' 
-              ? 'How can Nyaay सारथी help you today?' 
+              ? 'How can Nyaay Sarthi help you today?' 
               : 'न्याय सारथी आज आपकी किस प्रकार सहायता कर सकता है?'}
           </p>
 
@@ -109,7 +109,7 @@ export function CitizenHomePage({
 
               <div>
                 <h3 className="text-lg font-bold text-slate-900 mb-1.5 group-hover:text-sky-800 transition-colors">
-                  {language === 'en' ? 'Chat with Nyaay सारथी' : 'न्याय सारथी AI से बात करें'}
+                  {language === 'en' ? 'Chat with Nyaay Sarthi' : 'न्याय सारथी AI से बात करें'}
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
                   {language === 'en'
@@ -593,7 +593,7 @@ export function CitizenHomePage({
               {language === 'en' ? 'General Legal Information & Guidance' : 'सामान्य कानूनी सूचना व मार्गदर्शन'}
             </span>
             {language === 'en'
-              ? 'Nyaay सारथी is an educational assistance platform and not a replacement for a qualified advocate, court, or government authority.'
+              ? 'Nyaay Sarthi is an educational assistance platform and not a replacement for a qualified advocate, court, or government authority.'
               : 'न्याय सारथी एक कानूनी जागरूकता मंच है और यह किसी न्यायालय या अधिवक्ता का विकल्प नहीं है।'}
           </div>
 

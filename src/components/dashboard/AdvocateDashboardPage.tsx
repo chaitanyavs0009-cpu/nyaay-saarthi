@@ -325,14 +325,14 @@ export function AdvocateDashboardPage({
               <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-sky-50 border border-sky-200 p-0.5 shadow-sm overflow-hidden group-hover:scale-105 transition-transform">
                 <img 
                   src={logoImg} 
-                  alt="Nyaay सारथी Logo" 
+                  alt="Nyaay Sarthi Logo" 
                   className="w-full h-full object-cover rounded-xl"
                   referrerPolicy="no-referrer"
                 />
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-base sm:text-lg tracking-tight text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
-                  <span className="font-normal text-slate-800">Nyaay</span> <span className="text-sky-600 font-['Noto_Sans_Devanagari',sans-serif] font-bold">सारथी</span>
+                  <span className="font-bold text-slate-900">Nyaay</span> <span className="text-blue-600 font-bold">Sarthi</span>
                 </span>
                 <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-sky-700 bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200 shadow-2xs">
                   <Briefcase className="w-3 h-3 text-sky-600" />
@@ -1464,7 +1464,7 @@ export function AdvocateDashboardPage({
 
       {/* Footer */}
       <footer className="py-5 text-center text-xs text-slate-500 border-t border-sky-100 bg-white/70 mt-12">
-        <p>© {new Date().getFullYear()} Nyaay सारथी. State Bar Council Registered Advocate Network. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Nyaay Sarthi. State Bar Council Registered Advocate Network. All rights reserved.</p>
       </footer>
 
     </div>

@@ -1,6 +1,6 @@
 {
-  "name": "Remix nyaay-saarthi",
-  "description": "Imported from GitHub: chaitanyavs0009-cpu/nyaay-saarthi",
+  "name": "Nyaay Sarthi - Digital Legal Guidance",
+  "description": "Digital Legal Awareness & Guidance platform simplifying Indian Law, citizen rights, and verified legal consultations.",
   "requestFramePermissions": [
     "microphone"
   ],

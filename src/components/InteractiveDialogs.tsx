@@ -43,7 +43,7 @@ export function InteractiveDialogs({
     {
       role: 'assistant',
       text: language === 'en'
-        ? 'Namaste! I am Nyaay सारथी AI. Ask me any question about Indian laws, consumer rights, tenant disputes, cyber fraud, or advocate consultations.'
+        ? 'Namaste! I am Nyaay Sarthi AI. Ask me any question about Indian laws, consumer rights, tenant disputes, cyber fraud, or advocate consultations.'
         : 'नमस्ते! मैं न्याय सारथी AI हूँ। भारतीय कानून, उपभोक्ता अधिकार, किराया विवाद, साइबर ठगी या कानूनी परामर्श से संबंधित कोई भी प्रश्न पूछें।'
     }
   ]);
@@ -136,7 +136,7 @@ export function InteractiveDialogs({
             <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white border border-sky-100 p-0.5 flex items-center justify-center shadow-sm overflow-hidden">
               <img 
                 src={logoImg} 
-                alt="Nyaay सारथी Logo" 
+                alt="Nyaay Sarthi Logo" 
                 className="w-full h-full object-cover rounded-xl"
                 referrerPolicy="no-referrer"
               />
@@ -144,7 +144,7 @@ export function InteractiveDialogs({
             <div>
               <h3 className="font-semibold text-slate-900 text-base sm:text-lg">
                 {title || (
-                  <span><span className="font-normal text-slate-800">Nyaay</span> <span className="text-sky-600 font-['Noto_Sans_Devanagari',sans-serif] font-bold">सारथी</span></span>
+                  <span><span className="font-bold text-slate-900">Nyaay</span> <span className="text-blue-600 font-bold">Sarthi</span></span>
                 )}
               </h3>
               <p className="text-xs text-sky-600 font-medium">
@@ -526,7 +526,7 @@ export function InteractiveDialogs({
                       ? 'Dial 1930 within 2 hours of transaction.'
                       : actionKey === 'rights-legalaid'
                       ? 'Dial 15100 for free State legal aid lawyer.'
-                      : 'Consult a verified Nyaay सारथी advocate for notice drafting.'}
+                      : 'Consult a verified Nyaay Sarthi advocate for notice drafting.'}
                   </p>
                 </div>
               </div>
@@ -591,7 +591,7 @@ export function InteractiveDialogs({
           {actionKey === 'about-us' && (
             <div className="space-y-4 text-sm text-slate-700 leading-relaxed">
               <p>
-                <strong>Nyaay सारथी</strong> is an initiative dedicated to democratizing legal awareness and simplifying the justice process across India.
+                <strong>Nyaay Sarthi</strong> is an initiative dedicated to democratizing legal awareness and simplifying the justice process across India.
               </p>
               <p>
                 By combining conversational AI legal guidance with a nationwide network of verified Bar Council registered advocates, we help citizens understand their statutory rights without intimidating jargon.

@@ -23,7 +23,7 @@ export function Footer({ language, onActionClick }: FooterProps) {
             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/95 backdrop-blur-md p-1 shadow-md border border-white/90 flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform duration-200">
               <img 
                 src={logoImg} 
-                alt="Nyaay सारथी Logo" 
+                alt="Nyaay Sarthi Logo" 
                 className="w-full h-full object-cover rounded-xl"
                 referrerPolicy="no-referrer"
               />
@@ -31,7 +31,7 @@ export function Footer({ language, onActionClick }: FooterProps) {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-lg sm:text-xl tracking-tight text-white font-['Plus_Jakarta_Sans',sans-serif]">
-                  <span className="font-normal text-slate-200">Nyaay</span> <span className="text-sky-400 font-['Noto_Sans_Devanagari',sans-serif] font-bold">सारथी</span>
+                  <span className="font-bold text-white">Nyaay</span> <span className="text-sky-400 font-bold">Sarthi</span>
                 </span>
                 <span className="hidden sm:inline-block text-[11px] text-sky-300/80 border-l border-white/20 pl-2">
                   {language === 'en' ? 'Citizen Legal Assistance' : 'नागरिक कानूनी सहायता'}
@@ -175,12 +175,12 @@ export function Footer({ language, onActionClick }: FooterProps) {
             <ShieldCheck className="w-3.5 h-3.5 text-sky-400 shrink-0" />
             <p className="text-[10px] sm:text-[11px] text-slate-400 leading-tight">
               {language === 'en'
-                ? 'Nyaay सारथी is an informational & legal assistance gateway. Not a solicitation under Bar Council Rules.'
+                ? 'Nyaay Sarthi is an informational & legal assistance gateway. Not a solicitation under Bar Council Rules.'
                 : 'न्याय सारथी एक सूचना व कानूनी मार्गदर्शन मंच है। यह बार काउंसिल नियमों के तहत विज्ञापन या वकालत आमंत्रण नहीं है।'}
             </p>
           </div>
           <div className="text-[10px] sm:text-[11px] text-slate-400 whitespace-nowrap text-center">
-            <span>© {new Date().getFullYear()} Nyaay सारथी. All rights reserved.</span>
+            <span>© {new Date().getFullYear()} Nyaay Sarthi. All rights reserved.</span>
           </div>
         </div>
 

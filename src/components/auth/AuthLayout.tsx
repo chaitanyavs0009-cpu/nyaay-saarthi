@@ -57,13 +57,13 @@ export function AuthLayout({
             <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/95 border border-white/90 p-0.5 shadow-sm overflow-hidden">
               <img 
                 src={logoImg} 
-                alt="Nyaay सारथी Logo" 
+                alt="Nyaay Sarthi Logo" 
                 className="w-full h-full object-cover rounded-xl"
                 referrerPolicy="no-referrer"
               />
             </div>
             <span className="text-base sm:text-lg tracking-tight text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
-              <span className="font-normal text-slate-800">Nyaay</span> <span className="text-sky-600 font-['Noto_Sans_Devanagari',sans-serif] font-bold">सारथी</span>
+              <span className="font-bold text-slate-900">Nyaay</span> <span className="text-blue-600 font-bold">Sarthi</span>
             </span>
           </div>
 
@@ -106,7 +106,7 @@ export function AuthLayout({
               <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-white/95 backdrop-blur-md p-2 border border-white/90 shadow-[0_10px_30px_rgba(31,38,135,0.12)] flex items-center justify-center overflow-hidden">
                 <img 
                   src={logoImg} 
-                  alt="Nyaay सारथी Logo" 
+                  alt="Nyaay Sarthi Logo" 
                   className="w-full h-full object-cover rounded-2xl"
                   referrerPolicy="no-referrer"
                 />
@@ -114,7 +114,7 @@ export function AuthLayout({
             </div>
 
             <h1 className="text-2xl sm:text-3xl tracking-tight text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
-              <span className="font-normal text-slate-800">Nyaay</span> <span className="text-sky-600 font-['Noto_Sans_Devanagari',sans-serif] font-bold">सारथी</span>
+              <span className="font-bold text-slate-900">Nyaay</span> <span className="text-blue-600 font-bold">Sarthi</span>
             </h1>
 
             <p className="text-xs sm:text-sm font-medium text-slate-600 mt-1 max-w-md mx-auto">
@@ -169,7 +169,7 @@ export function AuthLayout({
 
       {/* Auth Page Mini-Footer */}
       <footer className="py-4 text-center text-xs text-slate-500 border-t border-white/70 bg-white/40 backdrop-blur-md">
-        <p>© {new Date().getFullYear()} Nyaay सारथी. Digital Legal Awareness & Guidance Platform.</p>
+        <p>© {new Date().getFullYear()} Nyaay Sarthi. Digital Legal Awareness & Guidance Platform.</p>
       </footer>
     </div>
   );

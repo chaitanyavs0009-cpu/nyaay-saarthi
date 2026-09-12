@@ -49,7 +49,7 @@ function getGenAI(): GoogleGenAI {
 }
 
 export function getModelConfig() {
-  const model = process.env.GEMINI_MODEL || 'gemini-3.7-flash';
+  const model = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
   const temperature = parseFloat(process.env.GEMINI_TEMPERATURE || '0.3');
   return {
     model,
@@ -58,9 +58,9 @@ export function getModelConfig() {
 }
 
 function getValidModelCascade(requestedModel?: string): string[] {
-  const primary = requestedModel && !requestedModel.includes('2.5') ? requestedModel : 'gemini-3.7-flash';
-  const candidates = [primary, 'gemini-3.7-flash', 'gemini-3.6-flash', 'gemini-3.1-flash-lite'];
-  return Array.from(new Set(candidates.filter(m => !m.includes('2.5'))));
+  const primary = requestedModel || 'gemini-3.8-flash';
+  const candidates = [primary, 'gemini-3.8-flash', 'gemini-3.1-flash-lite', 'gemini-flash-latest'];
+  return Array.from(new Set(candidates.filter(Boolean)));
 }
 
 function cleanJsonText(raw: string): string {

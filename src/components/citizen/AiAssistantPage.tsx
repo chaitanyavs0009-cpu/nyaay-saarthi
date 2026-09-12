@@ -48,7 +48,7 @@ export function AiAssistantPage({
     id: 'msg_welcome',
     sender: 'assistant',
     text: language === 'en'
-      ? `### ⚖️ Namaste! I am Nyaay सारथी AI Legal Assistant
+      ? `### ⚖️ Namaste! I am Nyaay Sarthi AI Legal Assistant
 Powered by **Google Gemini 3.7 Flash** with deep grounding in the **Constitution of India, BNS, BNSS, Consumer & Cyber Laws**.
 
 ---
@@ -482,7 +482,7 @@ Powered by **Google Gemini 3.7 Flash** with deep grounding in the **Constitution
             <span>{language === 'en' ? 'AI Legal Assistant • Powered by Gemini 3.7 Flash' : 'AI कानूनी सहायक • Gemini 3.7 Flash'}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            {language === 'en' ? 'Nyaay सारथी Legal Assistant' : 'न्याय सारथी AI सहायक'}
+            {language === 'en' ? 'Nyaay Sarthi Legal Assistant' : 'न्याय सारथी AI सहायक'}
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 font-medium">
             {language === 'en'
@@ -889,7 +889,7 @@ Powered by **Google Gemini 3.7 Flash** with deep grounding in the **Constitution
                 <Sparkles className="w-4 h-4 text-sky-600 animate-spin" />
                 <span>
                   {language === 'en' 
-                    ? 'Nyaay सारथी is analyzing statutes and drafting response...' 
+                    ? 'Nyaay Sarthi is analyzing statutes and drafting response...' 
                     : 'न्याय सारथी AI कानूनी संहिताओं का विश्लेषण कर रहा है...'}
                 </span>
               </div>

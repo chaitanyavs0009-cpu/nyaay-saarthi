@@ -1,0 +1,299 @@
+import sharp from 'sharp';
+import fs from 'fs';
+import path from 'path';
+
+// Exact SVG of the shield emblem from finalNyaay.jpeg
+const emblemSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="800" height="800">
+  <defs>
+    <!-- Left shield gradient (Sky Blue) -->
+    <linearGradient id="leftShieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00A3FF"/>
+      <stop offset="100%" stop-color="#0066EE"/>
+    </linearGradient>
+
+    <!-- Right shield gradient (Royal to Navy Blue) -->
+    <linearGradient id="rightShieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A369D"/>
+      <stop offset="100%" stop-color="#061B4E"/>
+    </linearGradient>
+
+    <!-- Bottom shield gradient -->
+    <linearGradient id="shieldBorderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#009BF5"/>
+      <stop offset="45%" stop-color="#0C40AA"/>
+      <stop offset="100%" stop-color="#041B4B"/>
+    </linearGradient>
+
+    <!-- Arrow gradient -->
+    <linearGradient id="arrowGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="60%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#E87B08"/>
+    </linearGradient>
+
+    <!-- Arrow head shadow / facet -->
+    <linearGradient id="arrowFacet" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E87B08"/>
+      <stop offset="100%" stop-color="#C25E00"/>
+    </linearGradient>
+
+    <!-- Head Amber Gradient -->
+    <linearGradient id="headGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+
+    <!-- Deep Blue for crossbar and central column -->
+    <linearGradient id="columnGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0D358E"/>
+      <stop offset="100%" stop-color="#061C48"/>
+    </linearGradient>
+
+    <!-- Cyan column highlight -->
+    <linearGradient id="columnHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00A3FF"/>
+      <stop offset="100%" stop-color="#0A369D"/>
+    </linearGradient>
+
+    <filter id="softGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#061B4E" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="500" height="500" fill="#FFFFFF"/>
+
+  <g transform="translate(0, 0)" filter="url(#softGlow)">
+    <!-- OUTER SHIELD -->
+    <!-- Outer boundary of the shield -->
+    <path d="M 125 180 
+             C 125 295 190 380 250 425 
+             C 310 380 375 295 375 180 
+             L 375 168 
+             L 360 168 
+             L 360 156 
+             L 140 156 
+             L 140 168 
+             L 125 168 Z" 
+          fill="none" 
+          stroke="url(#shieldBorderGrad)" 
+          stroke-width="19" 
+          stroke-linejoin="round"
+          stroke-linecap="round"/>
+
+    <!-- Inner Shield background / white cut -->
+    <path d="M 134 180 
+             C 134 288 195 368 250 410 
+             C 305 368 366 288 366 180 
+             L 366 165 
+             L 134 165 Z" 
+          fill="#FFFFFF"/>
+
+    <!-- TOP ORANGE HEAD CIRCLE -->
+    <circle cx="250" cy="116" r="23" fill="url(#headGrad)"/>
+
+    <!-- TOP HORIZONTAL CROSSBAR / ARCH OF JUSTICE -->
+    <!-- Cap and curved crossbeam supporting scales -->
+    <path d="M 152 144 
+             C 185 132 230 128 250 128 
+             C 270 128 315 132 348 144 
+             C 352 145 352 150 348 153 
+             C 318 165 285 170 250 170 
+             C 215 170 182 165 152 153 
+             C 148 150 148 145 152 144 Z" 
+          fill="url(#columnGrad)"/>
+
+    <!-- LEFT SCALE (SUSPENSION LINES & PAN) -->
+    <!-- Hanging cords -->
+    <path d="M 175 160 L 150 220 M 175 160 L 200 220" 
+          stroke="#0A2C72" 
+          stroke-width="3" 
+          stroke-linecap="round"/>
+    <line x1="175" y1="160" x2="175" y2="220" stroke="#0A2C72" stroke-width="2.5"/>
+    <!-- Left Scale Bowl/Pan -->
+    <path d="M 144 220 
+             C 144 240 206 240 206 220 
+             Z" 
+          fill="url(#columnGrad)"/>
+
+    <!-- RIGHT SCALE (SUSPENSION LINES & PAN) -->
+    <!-- Hanging cords -->
+    <path d="M 325 160 L 300 220 M 325 160 L 350 220" 
+          stroke="#0A2C72" 
+          stroke-width="3" 
+          stroke-linecap="round"/>
+    <line x1="325" y1="160" x2="325" y2="220" stroke="#0A2C72" stroke-width="2.5"/>
+    <!-- Right Scale Bowl/Pan -->
+    <path d="M 294 220 
+             C 294 240 356 240 356 220 
+             Z" 
+          fill="url(#columnGrad)"/>
+
+    <!-- CENTRAL PILLAR WITH CYAN HIGHLIGHT -->
+    <!-- Column torso of justice -->
+    <path d="M 234 168 
+             C 234 210 215 250 200 290 
+             C 195 304 190 318 185 334 
+             C 210 324 235 306 250 286 
+             C 265 240 266 195 266 168 Z" 
+          fill="url(#columnGrad)"/>
+    <!-- Cyan Left Edge glow on pillar -->
+    <path d="M 234 168 
+             C 234 210 215 250 200 290 
+             C 195 304 190 318 185 334
+             C 188 322 198 290 208 260
+             C 220 224 228 190 230 168 Z" 
+          fill="#00B0FF"/>
+
+    <!-- THE HIGHWAY / ROAD TO JUSTICE -->
+    <!-- Road surface flowing out from bottom -->
+    <path d="M 172 405 
+             C 198 375 220 338 238 290 
+             C 246 270 252 250 256 230 
+             C 264 250 268 275 272 295 
+             C 280 336 295 372 312 396 
+             C 292 414 270 426 250 435 
+             C 225 428 198 418 172 405 Z" 
+          fill="url(#columnGrad)"/>
+
+    <!-- White curved road surface inside -->
+    <path d="M 184 402 
+             C 212 374 230 340 244 296 
+             C 248 284 251 270 253 252 
+             C 255 270 258 286 262 298 
+             C 272 334 286 368 300 393 
+             C 284 406 268 414 250 422 
+             C 228 416 206 410 184 402 Z" 
+          fill="#0A3386"/>
+
+    <!-- White road perspective markings (Highway road center dash lines) -->
+    <path d="M 188 402 
+             C 212 376 226 342 238 300 
+             L 248 300 
+             C 238 346 222 384 198 408 Z" 
+          fill="#FFFFFF"/>
+    <path d="M 216 348 
+             C 226 328 234 304 240 274 
+             L 246 274 
+             C 242 302 234 326 224 350 Z" 
+          fill="#FFFFFF"/>
+
+    <!-- DYNAMIC GOLDEN ARROW SHOOTING UP-RIGHT -->
+    <!-- Arrow shaft / body emerging from road -->
+    <path d="M 264 306 
+             L 326 256 
+             L 302 248 
+             L 358 226 
+             L 352 284 
+             L 334 266 
+             L 278 316 Z" 
+          fill="url(#arrowGrad)"/>
+
+    <!-- Arrow head 3D facet -->
+    <path d="M 358 226 
+             L 352 284 
+             L 334 266 Z" 
+          fill="url(#arrowFacet)"/>
+  </g>
+</svg>`;
+
+// Full horizontal logo with Typography
+const fullLogoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 280" width="1000" height="280">
+  <defs>
+    <linearGradient id="shieldBorderGradF" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#009BF5"/>
+      <stop offset="45%" stop-color="#0C40AA"/>
+      <stop offset="100%" stop-color="#041B4B"/>
+    </linearGradient>
+    <linearGradient id="arrowGradF" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="60%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#E87B08"/>
+    </linearGradient>
+    <linearGradient id="arrowFacetF" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E87B08"/>
+      <stop offset="100%" stop-color="#C25E00"/>
+    </linearGradient>
+    <linearGradient id="headGradF" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <linearGradient id="columnGradF" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0D358E"/>
+      <stop offset="100%" stop-color="#061C48"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="280" fill="#FFFFFF"/>
+
+  <!-- Left: Shield Emblem scaled & centered at (130, 140) -->
+  <g transform="translate(20, -10) scale(0.55)">
+    <!-- Outer Shield -->
+    <path d="M 125 180 C 125 295 190 380 250 425 C 310 380 375 295 375 180 L 375 168 L 360 168 L 360 156 L 140 156 L 140 168 L 125 168 Z" 
+          fill="none" stroke="url(#shieldBorderGradF)" stroke-width="20" stroke-linejoin="round"/>
+    <path d="M 134 180 C 134 288 195 368 250 410 C 305 368 366 288 366 180 L 366 165 L 134 165 Z" fill="#FFFFFF"/>
+    <!-- Head -->
+    <circle cx="250" cy="116" r="23" fill="url(#headGradF)"/>
+    <!-- Crossbeam -->
+    <path d="M 152 144 C 185 132 230 128 250 128 C 270 128 315 132 348 144 C 352 145 352 150 348 153 C 318 165 285 170 250 170 C 215 170 182 165 152 153 C 148 150 148 145 152 144 Z" fill="url(#columnGradF)"/>
+    <!-- Left Scale -->
+    <path d="M 175 160 L 150 220 M 175 160 L 200 220" stroke="#0A2C72" stroke-width="3" stroke-linecap="round"/>
+    <line x1="175" y1="160" x2="175" y2="220" stroke="#0A2C72" stroke-width="2.5"/>
+    <path d="M 144 220 C 144 240 206 240 206 220 Z" fill="url(#columnGradF)"/>
+    <!-- Right Scale -->
+    <path d="M 325 160 L 300 220 M 325 160 L 350 220" stroke="#0A2C72" stroke-width="3" stroke-linecap="round"/>
+    <line x1="325" y1="160" x2="325" y2="220" stroke="#0A2C72" stroke-width="2.5"/>
+    <path d="M 294 220 C 294 240 356 240 356 220 Z" fill="url(#columnGradF)"/>
+    <!-- Column -->
+    <path d="M 234 168 C 234 210 215 250 200 290 C 195 304 190 318 185 334 C 210 324 235 306 250 286 C 265 240 266 195 266 168 Z" fill="url(#columnGradF)"/>
+    <path d="M 234 168 C 234 210 215 250 200 290 C 195 304 190 318 185 334 C 188 322 198 290 208 260 C 220 224 228 190 230 168 Z" fill="#00B0FF"/>
+    <!-- Highway -->
+    <path d="M 172 405 C 198 375 220 338 238 290 C 246 270 252 250 256 230 C 264 250 268 275 272 295 C 280 336 295 372 312 396 C 292 414 270 426 250 435 C 225 428 198 418 172 405 Z" fill="url(#columnGradF)"/>
+    <path d="M 188 402 C 212 376 226 342 238 300 L 248 300 C 238 346 222 384 198 408 Z" fill="#FFFFFF"/>
+    <path d="M 216 348 C 226 328 234 304 240 274 L 246 274 C 242 302 234 326 224 350 Z" fill="#FFFFFF"/>
+    <!-- Arrow -->
+    <path d="M 264 306 L 326 256 L 302 248 L 358 226 L 352 284 L 334 266 L 278 316 Z" fill="url(#arrowGradF)"/>
+    <path d="M 358 226 L 352 284 L 334 266 Z" fill="url(#arrowFacetF)"/>
+  </g>
+
+  <!-- Right: Typography "Nyaay Sarthi" -->
+  <g transform="translate(300, 0)">
+    <!-- "Nyaay" in dark navy -->
+    <text x="0" y="145" font-family="'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="94" fill="#0A1C43" letter-spacing="-1">Nyaay</text>
+    
+    <!-- "Sarthi" in royal blue with dotless i ensuring no dots -->
+    <text x="310" y="145" font-family="'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="94" fill="#144ED8" letter-spacing="-1">Sarth<tspan fill="#F59E0B">ı</tspan></text>
+    
+    <!-- Tagline: "— Your Guide. Your Rights. Your Justice. —" -->
+    <g transform="translate(2, 185)">
+      <!-- Left line -->
+      <line x1="0" y1="-8" x2="60" y2="-8" stroke="#0C255E" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Subtitle text -->
+      <text x="75" y="0" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="24" fill="#0C255E" letter-spacing="0.5">Your Guide. Your Rights. Your Justice.</text>
+      <!-- Right line -->
+      <line x1="565" y1="-8" x2="625" y2="-8" stroke="#0C255E" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>`;
+
+async function run() {
+  console.log('Rendering logos...');
+
+  const officialLogoPath = 'src/assets/images/nyaay_sarthi_new_logo_1789199286247.jpg';
+
+  if (fs.existsSync(officialLogoPath)) {
+    fs.copyFileSync(officialLogoPath, 'public/logo.jpg');
+    fs.copyFileSync(officialLogoPath, 'src/assets/images/nyaay_sarathi_logo_1787153284213.jpg');
+    fs.copyFileSync(officialLogoPath, 'src/assets/images/nyaay_sarthi_logo.jpg');
+    fs.copyFileSync(officialLogoPath, 'public/nyaay_sarthi_logo.jpg');
+  }
+
+  // Also render full brand graphic
+  await sharp(Buffer.from(fullLogoSvg))
+    .resize(1200, 336)
+    .jpeg({ quality: 96 })
+    .toFile('public/nyaay_sarthi_banner.jpg');
+
+  console.log('Logos successfully preserved and updated!');
+}
+
+run().catch(console.error);

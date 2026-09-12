@@ -35,14 +35,14 @@ export function UserSettingsPage({
     const exportPayload = {
       user,
       exportDate: new Date().toISOString(),
-      platform: 'Nyaay सारथी Citizen Portal',
+      platform: 'Nyaay Sarthi Citizen Portal',
       compliance: 'Digital Personal Data Protection Act (DPDP), 2023',
     };
     const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `nyaay_sarathi_data_${user.id}.json`;
+    a.download = `nyaay_sarthi_data_${user.id}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -166,7 +166,7 @@ export function UserSettingsPage({
           <label className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 cursor-pointer">
             <div>
               <span className="font-bold text-slate-900 block">WhatsApp Updates</span>
-              <span className="text-xs text-slate-500">Real-time status alerts from Nyaay सारथी Verified Business Account</span>
+              <span className="text-xs text-slate-500">Real-time status alerts from Nyaay Sarthi Verified Business Account</span>
             </div>
             <input
               type="checkbox"

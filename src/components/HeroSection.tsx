@@ -17,7 +17,7 @@ export function HeroSection({ language, onActionClick }: HeroSectionProps) {
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/70 backdrop-blur-md border border-white/85 text-sky-900 text-xs sm:text-sm font-semibold mb-5 shadow-[0_4px_16px_rgba(31,38,135,0.06)]">
             <img 
               src={logoImg} 
-              alt="Nyaay सारथी" 
+              alt="Nyaay Sarthi" 
               className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover shadow-sm ring-1 ring-sky-300/60" 
               referrerPolicy="no-referrer"
             />
@@ -68,7 +68,7 @@ export function HeroSection({ language, onActionClick }: HeroSectionProps) {
             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-white/90 backdrop-blur-md border border-white/90 p-1 flex items-center justify-center shadow-md overflow-hidden shrink-0">
               <img 
                 src={logoImg} 
-                alt="Nyaay सारथी" 
+                alt="Nyaay Sarthi" 
                 className="w-full h-full object-cover rounded-2xl"
                 referrerPolicy="no-referrer"
               />
@@ -76,7 +76,7 @@ export function HeroSection({ language, onActionClick }: HeroSectionProps) {
             <div>
               <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-slate-900">
                 {language === 'en' ? (
-                  <span>What is <span className="font-normal text-slate-800">Nyaay</span> <span className="text-sky-600 font-['Noto_Sans_Devanagari',sans-serif] font-bold">सारथी</span>?</span>
+                  <span>What is <span className="font-bold text-slate-900">Nyaay</span> <span className="text-blue-600 font-bold">Sarthi</span>?</span>
                 ) : (
                   <span>{HERO_CONTENT.whatIsItTitle[language]}</span>
                 )}

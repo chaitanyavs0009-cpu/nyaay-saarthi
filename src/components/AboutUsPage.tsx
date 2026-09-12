@@ -44,7 +44,7 @@ export function AboutUsPage({
       hi: 'होम पर वापस जाएं',
     },
     heroHeading: {
-      en: 'What is Nyaay सारथी?',
+      en: 'What is Nyaay Sarthi?',
       hi: 'न्याय सारथी क्या है?',
     },
     heroHeadline: {
@@ -227,13 +227,13 @@ export function AboutUsPage({
               <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/95 border border-white/90 p-0.5 shadow-sm overflow-hidden">
                 <img 
                   src={logoImg} 
-                  alt="Nyaay सारथी Logo" 
+                  alt="Nyaay Sarthi Logo" 
                   className="w-full h-full object-cover rounded-xl"
                   referrerPolicy="no-referrer"
                 />
               </div>
               <span className="text-sm font-semibold text-slate-900">
-                <span className="font-normal text-slate-800">Nyaay</span> <span className="text-sky-600 font-['Noto_Sans_Devanagari',sans-serif] font-bold">सारथी</span>
+                <span className="font-bold text-slate-900">Nyaay</span> <span className="text-blue-600 font-bold">Sarthi</span>
               </span>
               <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-sky-500/15 border border-sky-300/40 text-sky-900 font-bold">
                 {language === 'en' ? 'About Us' : 'हमारे बारे में'}
@@ -292,7 +292,7 @@ export function AboutUsPage({
                 <div className="relative w-36 h-36 sm:w-44 sm:h-44 rounded-3xl bg-white/95 backdrop-blur-xl p-3 border border-white/95 shadow-[0_16px_48px_rgba(31,38,135,0.18)] flex items-center justify-center overflow-hidden">
                   <img
                     src={logoImg}
-                    alt="Nyaay सारथी Logo"
+                    alt="Nyaay Sarthi Logo"
                     className="w-full h-full object-cover rounded-2xl"
                     referrerPolicy="no-referrer"
                   />
@@ -460,7 +460,7 @@ export function AboutUsPage({
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse" />
                   <span className="text-xs font-mono tracking-widest uppercase font-bold text-sky-300">
-                    Nyaay सारथी Architecture
+                    Nyaay Sarthi Architecture
                   </span>
                 </div>
                 <div className="flex items-center gap-8 text-[11px] font-mono text-slate-300 tracking-wider">

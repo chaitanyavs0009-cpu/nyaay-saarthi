@@ -104,7 +104,7 @@ export function CitizenNavbar({
             <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-2xl flex items-center justify-center shadow-md group-hover:shadow-[0_0_20px_rgba(74,144,226,0.4)] group-hover:scale-105 transition-all duration-300 shrink-0 overflow-hidden ring-1 ring-slate-900/10">
               <img 
                 src={logoImg} 
-                alt="Nyaay सारथी Logo" 
+                alt="Nyaay Sarthi Logo" 
                 className="w-full h-full object-cover rounded-2xl" 
                 referrerPolicy="no-referrer"
               />
@@ -112,7 +112,7 @@ export function CitizenNavbar({
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5 whitespace-nowrap">
                 <span className="text-xl sm:text-2xl tracking-tight text-slate-900 font-['Outfit','Plus_Jakarta_Sans',sans-serif]">
-                  <span className="font-normal text-slate-800">Nyaay</span> <span className="text-sky-600 font-['Noto_Sans_Devanagari',sans-serif] font-bold">सारथी</span>
+                  <span className="font-bold text-slate-900">Nyaay</span> <span className="text-blue-600 font-bold">Sarthi</span>
                 </span>
                 <span className="hidden sm:inline-block px-2 py-0.5 bg-sky-500/15 text-sky-950 border border-sky-300/40 backdrop-blur-sm text-[10px] font-bold rounded-full tracking-wide uppercase">
                   {language === 'en' ? 'Citizen' : 'नागरिक'}
