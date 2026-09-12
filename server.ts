@@ -16,6 +16,24 @@ import {
 } from './src/server/apiHandler.ts';
 import { rateLimiterMiddleware } from './src/server/rateLimiter.ts';
 import { getModelConfig } from './src/server/geminiService.ts';
+import { initDatabase, getPool } from './src/server/db.ts';
+import {
+  handleRegister,
+  handleLogin,
+  handleGetUser,
+  handleUpdateUser,
+  handleChangePassword,
+  handleGetAdvocates,
+  handleGetAdvocateById,
+  handleGetAdvocateProfile,
+  handleUpdateAdvocateProfile,
+  handleGetAppointments,
+  handleCreateAppointment,
+  handleUpdateAppointmentStatus,
+  handleGetApplications,
+  handleCreateApplication,
+  handleUpdateApplicationStatus
+} from './src/server/dbHandler.ts';
 
 dotenv.config();
 
@@ -23,7 +41,49 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
+  // Initialize PostgreSQL database schema safely in the background
+  if (process.env.DATABASE_URL) {
+    initDatabase().catch(err => {
+      console.error('[PostgreSQL] Background initialization error:', err.message);
+    });
+  }
+
   app.use(express.json({ limit: '10mb' }));
+
+  // Authentication & Account Persistence Endpoints
+  app.post('/api/auth/register', handleRegister);
+  app.post('/api/register', handleRegister);
+  app.post('/api/auth/login', handleLogin);
+  app.post('/api/login', handleLogin);
+
+  // User Profile Endpoints
+  app.get('/api/users/:id', handleGetUser);
+  app.put('/api/users/:id', handleUpdateUser);
+  app.put('/api/users/:id/password', handleChangePassword);
+
+  // Authenticated Advocate Profile Endpoints (PostgreSQL backed by user_id)
+  app.get('/api/advocate/profile', handleGetAdvocateProfile);
+  app.get('/api/advocate/profile/:userId', handleGetAdvocateProfile);
+  app.get('/api/advocates/profile', handleGetAdvocateProfile);
+  app.get('/api/advocates/profile/:userId', handleGetAdvocateProfile);
+  app.put('/api/advocate/profile', handleUpdateAdvocateProfile);
+  app.put('/api/advocate/profile/:userId', handleUpdateAdvocateProfile);
+  app.put('/api/advocates/profile', handleUpdateAdvocateProfile);
+  app.put('/api/advocates/profile/:userId', handleUpdateAdvocateProfile);
+
+  // Advocates Directory & Discovery Endpoints
+  app.get('/api/advocates', handleGetAdvocates);
+  app.get('/api/advocates/:id', handleGetAdvocateById);
+
+  // Appointments Endpoints
+  app.get('/api/appointments', handleGetAppointments);
+  app.post('/api/appointments', handleCreateAppointment);
+  app.patch('/api/appointments/:id/status', handleUpdateAppointmentStatus);
+
+  // Applications Endpoints
+  app.get('/api/applications', handleGetApplications);
+  app.post('/api/applications', handleCreateApplication);
+  app.patch('/api/applications/:id/status', handleUpdateApplicationStatus);
 
   // Apply rate limiting to all AI / Chat endpoints
   app.use('/api/chat', rateLimiterMiddleware);
@@ -53,7 +113,8 @@ async function startServer() {
       time: new Date().toISOString(),
       model: config.model,
       temperature: config.temperature,
-      hasKey: Boolean(process.env.GEMINI_API_KEY)
+      hasKey: Boolean(process.env.GEMINI_API_KEY),
+      hasDatabase: Boolean(process.env.DATABASE_URL)
     });
   });
 

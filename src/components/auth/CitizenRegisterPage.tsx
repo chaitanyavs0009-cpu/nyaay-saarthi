@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { User, Phone, Mail, Lock, Eye, EyeOff, CheckCircle2, UserPlus } from 'lucide-react';
+import { User, Phone, Mail, Lock, Eye, EyeOff, CheckCircle2, UserPlus, Calendar, MapPin, Home } from 'lucide-react';
 import { Language, AppRoute, AuthUser } from '../../types';
 import { AuthLayout } from './AuthLayout';
+import { apiRegister } from '../../services/apiClient';
 
 interface CitizenRegisterPageProps {
   language: Language;
@@ -19,6 +20,10 @@ export function CitizenRegisterPage({
   const [fullName, setFullName] = useState('');
   const [mobile, setMobile] = useState('');
   const [email, setEmail] = useState('');
+  const [dob, setDob] = useState('');
+  const [state, setState] = useState('');
+  const [city, setCity] = useState('');
+  const [address, setAddress] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -27,7 +32,7 @@ export function CitizenRegisterPage({
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
@@ -58,18 +63,24 @@ export function CitizenRegisterPage({
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      const newUser: AuthUser = {
-        id: 'usr_' + Date.now().toString().slice(-6),
-        name: fullName.trim(),
+    try {
+      const result = await apiRegister({
+        fullName: fullName.trim(),
         email: email.trim(),
-        phone: mobile.trim(),
+        mobile: mobile.trim(),
+        password,
         role: 'citizen',
-        createdAt: new Date().toISOString(),
-      };
-      onRegisterSuccess(newUser);
-    }, 500);
+        dob: dob.trim(),
+        state: state.trim(),
+        city: city.trim(),
+        address: address.trim(),
+      });
+      setIsSubmitting(false);
+      onRegisterSuccess(result.user);
+    } catch (err: any) {
+      setIsSubmitting(false);
+      setErrorMsg(err.message || (language === 'en' ? 'Registration failed. Please try again.' : 'पंजीकरण विफल रहा। कृपया पुनः प्रयास करें।'));
+    }
   };
 
   return (
@@ -158,6 +169,87 @@ export function CitizenRegisterPage({
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 text-slate-900 text-sm focus:bg-white/95 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-400 transition-all font-mono font-medium shadow-inner"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Date of Birth & State/UT row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                {language === 'en' ? 'Date of Birth' : 'जन्म तिथि'}
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <Calendar className="w-4 h-4" />
+                </div>
+                <input
+                  id="citizen-reg-dob"
+                  type="date"
+                  value={dob}
+                  onChange={(e) => setDob(e.target.value)}
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 text-slate-900 text-sm focus:bg-white/95 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-400 transition-all font-medium shadow-inner"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                {language === 'en' ? 'State / UT' : 'राज्य / केंद्र शासित प्रदेश'}
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <input
+                  id="citizen-reg-state"
+                  type="text"
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                  placeholder={language === 'en' ? 'e.g. Maharashtra / Delhi' : 'उदा. महाराष्ट्र / दिल्ली'}
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 text-slate-900 text-sm focus:bg-white/95 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-400 transition-all font-medium shadow-inner"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* City / District & Residential Address */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                {language === 'en' ? 'City / District' : 'शहर / जिला'}
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <input
+                  id="citizen-reg-city"
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder={language === 'en' ? 'e.g. Mumbai / Pune' : 'उदा. मुंबई / पुणे'}
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 text-slate-900 text-sm focus:bg-white/95 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-400 transition-all font-medium shadow-inner"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                {language === 'en' ? 'Residential Address' : 'आवासीय पता'}
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <Home className="w-4 h-4" />
+                </div>
+                <input
+                  id="citizen-reg-address"
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder={language === 'en' ? 'e.g. Flat 101, Sector 4' : 'उदा. फ्लैट 101, सेक्टर 4'}
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 text-slate-900 text-sm focus:bg-white/95 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-400 transition-all font-medium shadow-inner"
                 />
               </div>
             </div>

@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { Language, AppRoute, AuthUser } from '../../types';
 import { DEFAULT_CITIZEN_AVATAR, saveStoredUser } from '../../data/portalData';
+import { apiUpdateUser, apiChangePassword } from '../../services/apiClient';
 
 interface UserProfilePageProps {
   user: AuthUser;
@@ -58,11 +59,11 @@ export function UserProfilePage({
     reader.readAsDataURL(file);
   };
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
     
-    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
+    if (!formData.name.trim() || !formData.email.trim() || !formData.phone?.trim()) {
       setErrorMessage('Name, email and mobile number are required.');
       return;
     }
@@ -70,11 +71,17 @@ export function UserProfilePage({
     saveStoredUser(formData);
     onUpdateUser(formData);
     setIsEditing(false);
-    setSuccessMessage('Profile details saved successfully!');
+
+    try {
+      await apiUpdateUser(formData.id, formData);
+      setSuccessMessage('Profile details saved successfully!');
+    } catch (err: any) {
+      setSuccessMessage('Profile details saved locally.');
+    }
     setTimeout(() => setSuccessMessage(''), 3000);
   };
 
-  const handleChangePassword = (e: React.FormEvent) => {
+  const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setPasswordError('');
     setPasswordSuccess('');
@@ -92,14 +99,19 @@ export function UserProfilePage({
       return;
     }
 
-    setPasswordSuccess('Password updated successfully!');
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
-    setTimeout(() => {
-      setPasswordSuccess('');
-      setShowPasswordSection(false);
-    }, 2500);
+    try {
+      await apiChangePassword(formData.id, currentPassword, newPassword);
+      setPasswordSuccess('Password updated successfully!');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setTimeout(() => {
+        setPasswordSuccess('');
+        setShowPasswordSection(false);
+      }, 2500);
+    } catch (err: any) {
+      setPasswordError(err.message || 'Failed to update password.');
+    }
   };
 
   const photoSrc = user.profilePicture || DEFAULT_CITIZEN_AVATAR;
@@ -213,11 +225,11 @@ export function UserProfilePage({
               </p>
               <p className="flex items-center justify-between">
                 <span>City:</span>
-                <strong className="text-slate-800">{user.city || 'New Delhi'}</strong>
+                <strong className="text-slate-800">{user.city || 'Not specified'}</strong>
               </p>
               <p className="flex items-center justify-between">
                 <span>State:</span>
-                <strong className="text-slate-800">{user.state || 'Delhi'}</strong>
+                <strong className="text-slate-800">{user.state || 'Not specified'}</strong>
               </p>
             </div>
           </div>
@@ -348,13 +360,13 @@ export function UserProfilePage({
                   {isEditing ? (
                     <input
                       type="date"
-                      value={formData.dob || '1992-05-14'}
+                      value={formData.dob || ''}
                       onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
                       className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-sky-500"
                     />
                   ) : (
                     <p className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-xs font-semibold text-slate-800">
-                      {user.dob || '14 May 1992'}
+                      {user.dob || 'Not provided'}
                     </p>
                   )}
                 </div>
@@ -365,13 +377,14 @@ export function UserProfilePage({
                   {isEditing ? (
                     <input
                       type="text"
-                      value={formData.state || 'Delhi'}
+                      value={formData.state || ''}
                       onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                      placeholder="e.g. Maharashtra"
                       className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-sky-500"
                     />
                   ) : (
                     <p className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-xs font-semibold text-slate-800">
-                      {user.state || 'Delhi'}
+                      {user.state || 'Not provided'}
                     </p>
                   )}
                 </div>
@@ -382,13 +395,14 @@ export function UserProfilePage({
                   {isEditing ? (
                     <input
                       type="text"
-                      value={formData.city || 'New Delhi'}
+                      value={formData.city || ''}
                       onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                      placeholder="e.g. Mumbai"
                       className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-sky-500"
                     />
                   ) : (
                     <p className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-xs font-semibold text-slate-800">
-                      {user.city || 'New Delhi'}
+                      {user.city || 'Not provided'}
                     </p>
                   )}
                 </div>
@@ -401,13 +415,14 @@ export function UserProfilePage({
                 {isEditing ? (
                   <textarea
                     rows={2}
-                    value={formData.address || 'B-42, Pocket 1, Mayur Vihar Phase 1, New Delhi - 110091'}
+                    value={formData.address || ''}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    placeholder="Enter residential address"
                     className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-sky-500"
                   />
                 ) : (
                   <p className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-xs font-semibold text-slate-800">
-                    {user.address || 'B-42, Pocket 1, Mayur Vihar Phase 1, New Delhi - 110091'}
+                    {user.address || 'Not provided'}
                   </p>
                 )}
               </div>

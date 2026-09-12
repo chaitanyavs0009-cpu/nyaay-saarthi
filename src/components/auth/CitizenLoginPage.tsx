@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, CheckCircle2, Sparkles, ArrowRight, UserCheck, Shield } from 'lucide-react';
 import { Language, AppRoute, AuthUser } from '../../types';
 import { AuthLayout } from './AuthLayout';
+import { apiLogin } from '../../services/apiClient';
 
 interface CitizenLoginPageProps {
   language: Language;
@@ -23,7 +24,7 @@ export function CitizenLoginPage({
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
@@ -34,19 +35,18 @@ export function CitizenLoginPage({
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      // Construct user object
-      const user: AuthUser = {
-        id: 'usr_' + Date.now().toString().slice(-6),
-        name: email.split('@')[0].replace(/[^a-zA-Z]/g, ' ') || 'Citizen User',
+    try {
+      const result = await apiLogin({
         email: email.trim(),
+        password,
         role: 'citizen',
-        phone: '+91 9876543210',
-        createdAt: new Date().toISOString(),
-      };
-      onLoginSuccess(user);
-    }, 500);
+      });
+      setIsSubmitting(false);
+      onLoginSuccess(result.user);
+    } catch (err: any) {
+      setIsSubmitting(false);
+      setErrorMsg(err.message || (language === 'en' ? 'Invalid credentials. Please verify your email and password.' : 'अमान्य क्रेडेंशियल्स। कृपया अपना ईमेल और पासवर्ड जांचें।'));
+    }
   };
 
   const handleDemoFillCitizen = () => {

@@ -45,6 +45,9 @@ export interface AuthUser {
   courts?: string;
   languages?: string;
   consultationFee?: string;
+  consultationDuration?: string;
+  consultationDurationMinutes?: number;
+  verificationStatus?: string;
   isVerified?: boolean;
   token?: string;
   createdAt?: string;
@@ -53,6 +56,7 @@ export interface AuthUser {
 
 export interface Advocate {
   id: string;
+  userId?: string;
   name: string;
   email: string;
   phone: string;
@@ -67,12 +71,16 @@ export interface Advocate {
   state: string;
   languages: string[];
   consultationFee: number;
+  consultationDuration?: string;
+  consultationDurationMinutes?: number;
+  verificationStatus?: string;
   rating: number;
   reviewCount: number;
   availability: 'Today' | 'This Week' | 'Available Today' | 'Next Available: Tomorrow';
   about: string;
   education: string;
   barEnrollment: string;
+  stateBarCouncil?: string;
   courts: string;
   pastCasesSummary?: string;
   reviews?: Array<{

@@ -37,7 +37,7 @@ Key Response Guidelines:
 *ℹ️ Educational legal guidance under Indian law. Consult a registered advocate or DLSA clinic for courtroom representation.*`;
 
 function getGenAI(): GoogleGenAI {
-  const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || process.env.API_KEY || "";
+  const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY || "";
   return new GoogleGenAI({
     apiKey,
     httpOptions: {

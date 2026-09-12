@@ -1,6 +1,6 @@
 {
-  "name": "Nyaay Sarthi - Digital Legal Guidance",
-  "description": "Digital Legal Awareness & Guidance platform simplifying Indian Law, citizen rights, and verified legal consultations.",
+  "name": "Remix nyaay-saarthi-ai",
+  "description": "Imported from GitHub: codecraftpython-dev/nyaay-saarthi-ai",
   "requestFramePermissions": [
     "microphone"
   ],

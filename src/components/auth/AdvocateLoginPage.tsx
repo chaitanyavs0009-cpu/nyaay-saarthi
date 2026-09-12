@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, ShieldCheck, Sparkles, Scale, Briefcase, Award } from 'lucide-react';
 import { Language, AppRoute, AuthUser } from '../../types';
 import { AuthLayout } from './AuthLayout';
+import { apiLogin } from '../../services/apiClient';
 
 interface AdvocateLoginPageProps {
   language: Language;
@@ -24,7 +25,7 @@ export function AdvocateLoginPage({
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
@@ -35,25 +36,18 @@ export function AdvocateLoginPage({
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      const user: AuthUser = {
-        id: 'adv_' + Date.now().toString().slice(-6),
-        name: email.includes('sharma') ? 'Adv. Vikram Sharma' : ('Adv. ' + (email.split('@')[0].replace(/[^a-zA-Z]/g, ' ') || 'Legal Practitioner')),
+    try {
+      const result = await apiLogin({
         email: email.trim(),
+        password,
         role: 'advocate',
-        barEnrollment: barEnrollment.trim() || 'D/1842/2016',
-        stateBarCouncil: 'Bar Council of Delhi',
-        practiceAreas: ['Constitutional Law', 'Criminal Defense', 'Consumer Disputes'],
-        experience: '8+ Years',
-        courts: 'Delhi High Court & Supreme Court of India',
-        languages: 'English, Hindi',
-        consultationFee: '₹800 / session',
-        isVerified: true,
-        createdAt: new Date().toISOString(),
-      };
-      onLoginSuccess(user);
-    }, 500);
+      });
+      setIsSubmitting(false);
+      onLoginSuccess(result.user);
+    } catch (err: any) {
+      setIsSubmitting(false);
+      setErrorMsg(err.message || (language === 'en' ? 'Invalid credentials. Please verify your email and password.' : 'अमान्य क्रेडेंशियल्स। कृपया अपना ईमेल और पासवर्ड जांचें।'));
+    }
   };
 
   const handleDemoFillAdvocate = () => {

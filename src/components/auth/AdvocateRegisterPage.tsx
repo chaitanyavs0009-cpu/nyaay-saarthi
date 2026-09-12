@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { User, Phone, Mail, Lock, Eye, EyeOff, Award, FileText, Upload, CheckCircle2, AlertTriangle, ShieldCheck, Briefcase } from 'lucide-react';
 import { Language, AppRoute, AuthUser } from '../../types';
 import { AuthLayout } from './AuthLayout';
+import { apiRegister } from '../../services/apiClient';
 
 interface AdvocateRegisterPageProps {
   language: Language;
@@ -28,7 +29,9 @@ export function AdvocateRegisterPage({
   const [experience, setExperience] = useState('5-8 Years');
   const [courts, setCourts] = useState('District Courts & High Court');
   const [languages, setLanguages] = useState('English, Hindi');
-  const [consultationFee, setConsultationFee] = useState('₹500 / 30 mins');
+  const [city, setCity] = useState('');
+  const [consultationFee, setConsultationFee] = useState('500');
+  const [consultationDuration, setConsultationDuration] = useState('30 mins');
 
   // Files
   const [barIdFile, setBarIdFile] = useState<string | null>(null);
@@ -59,7 +62,7 @@ export function AdvocateRegisterPage({
     'Other State Bar Council',
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
@@ -90,26 +93,31 @@ export function AdvocateRegisterPage({
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      const newUser: AuthUser = {
-        id: 'adv_' + Date.now().toString().slice(-6),
-        name: fullName.startsWith('Adv.') ? fullName.trim() : 'Adv. ' + fullName.trim(),
+    try {
+      const result = await apiRegister({
+        fullName: fullName.trim(),
         email: email.trim(),
-        phone: mobile.trim(),
+        mobile: mobile.trim(),
+        password,
         role: 'advocate',
         barEnrollment: barEnrollment.trim().toUpperCase(),
-        stateBarCouncil: stateBarCouncil,
-        practiceAreas: practiceAreas.split(',').map((s) => s.trim()),
-        experience: experience,
-        courts: courts,
-        languages: languages,
-        consultationFee: consultationFee,
-        isVerified: false,
-        createdAt: new Date().toISOString(),
-      };
-      onRegisterSuccess(newUser);
-    }, 600);
+        stateBarCouncil,
+        practiceAreas,
+        experience,
+        courts,
+        languages,
+        consultationFee,
+        consultationDuration,
+        city: city.trim(),
+        state: stateBarCouncil ? stateBarCouncil.replace('Bar Council of ', '').split('&')[0].trim() : '',
+      });
+
+      setIsSubmitting(false);
+      onRegisterSuccess(result.user);
+    } catch (err: any) {
+      setIsSubmitting(false);
+      setErrorMsg(err.message || (language === 'en' ? 'Registration failed. Please try again.' : 'पंजीकरण विफल रहा।'));
+    }
   };
 
   return (
@@ -212,6 +220,21 @@ export function AdvocateRegisterPage({
                 />
               </div>
             </div>
+
+            {/* City / Practice Location */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                {language === 'en' ? 'City / Practice Location' : 'शहर / अभ्यास स्थान'}
+              </label>
+              <input
+                id="adv-reg-city"
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder="e.g. New Delhi / Mumbai / Bengaluru"
+                className="w-full px-3.5 py-2.5 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 text-slate-900 text-sm focus:bg-white/95 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-400 transition-all font-medium shadow-inner"
+              />
+            </div>
           </div>
 
           {/* SECTION 2: PROFESSIONAL DETAILS */}
@@ -264,6 +287,7 @@ export function AdvocateRegisterPage({
                   {language === 'en' ? 'Practice Areas' : 'अभ्यास क्षेत्र'}
                 </label>
                 <input
+                  id="adv-reg-practice-areas"
                   type="text"
                   value={practiceAreas}
                   onChange={(e) => setPracticeAreas(e.target.value)}
@@ -277,6 +301,7 @@ export function AdvocateRegisterPage({
                   {language === 'en' ? 'Years of Experience' : 'अनुभव (वर्ष)'}
                 </label>
                 <select
+                  id="adv-reg-experience"
                   value={experience}
                   onChange={(e) => setExperience(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 text-slate-900 text-sm focus:bg-white/95 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-400 transition-all font-medium shadow-inner"
@@ -290,13 +315,14 @@ export function AdvocateRegisterPage({
               </div>
             </div>
 
-            {/* Courts, Languages & Consultation Fee */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+            {/* Courts & Languages */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                   {language === 'en' ? 'Courts / Jurisdictions' : 'न्यायालय / क्षेत्राधिकार'}
                 </label>
                 <input
+                  id="adv-reg-courts"
                   type="text"
                   value={courts}
                   onChange={(e) => setCourts(e.target.value)}
@@ -310,6 +336,7 @@ export function AdvocateRegisterPage({
                   {language === 'en' ? 'Languages' : 'भाषाएं'}
                 </label>
                 <input
+                  id="adv-reg-languages"
                   type="text"
                   value={languages}
                   onChange={(e) => setLanguages(e.target.value)}
@@ -317,18 +344,41 @@ export function AdvocateRegisterPage({
                   className="w-full px-3.5 py-2.5 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 text-slate-900 text-sm focus:bg-white/95 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-400 transition-all font-medium shadow-inner"
                 />
               </div>
+            </div>
+
+            {/* Consultation Fee & Duration */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                  {language === 'en' ? 'Consultation Fee (₹ INR)' : 'परामर्श शुल्क (₹)'}
+                </label>
+                <input
+                  id="adv-reg-fee"
+                  type="number"
+                  min="0"
+                  step="50"
+                  value={consultationFee}
+                  onChange={(e) => setConsultationFee(e.target.value)}
+                  placeholder="500"
+                  className="w-full px-3.5 py-2.5 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 text-slate-900 text-sm focus:bg-white/95 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-400 transition-all font-medium shadow-inner"
+                />
+              </div>
 
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                  {language === 'en' ? 'Consultation Fee' : 'परामर्श शुल्क'}
+                  {language === 'en' ? 'Consultation Duration' : 'परामर्श अवधि'}
                 </label>
-                <input
-                  type="text"
-                  value={consultationFee}
-                  onChange={(e) => setConsultationFee(e.target.value)}
-                  placeholder="e.g. ₹500 / ₹1000"
+                <select
+                  id="adv-reg-duration"
+                  value={consultationDuration}
+                  onChange={(e) => setConsultationDuration(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 text-slate-900 text-sm focus:bg-white/95 focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-400 transition-all font-medium shadow-inner"
-                />
+                >
+                  <option value="15 mins">15 mins</option>
+                  <option value="30 mins">30 mins</option>
+                  <option value="45 mins">45 mins</option>
+                  <option value="60 mins">60 mins</option>
+                </select>
               </div>
             </div>
           </div>

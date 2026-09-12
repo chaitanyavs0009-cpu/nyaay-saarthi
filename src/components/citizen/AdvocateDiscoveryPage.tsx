@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Search, Filter, ShieldCheck, Star, MapPin, Calendar, 
   Clock, ArrowRight, UserCheck, SlidersHorizontal, X, Check,
@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { Language, AppRoute, Advocate } from '../../types';
 import { INITIAL_ADVOCATES, DEFAULT_CITIZEN_AVATAR } from '../../data/portalData';
+import { apiGetAdvocates } from '../../services/apiClient';
 
 interface AdvocateDiscoveryPageProps {
   language: Language;
@@ -36,6 +37,21 @@ export function AdvocateDiscoveryPage({
   const [selectedLanguage, setSelectedLanguage] = useState<string>('All');
   const [availableTodayOnly, setAvailableTodayOnly] = useState(false);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [advocatesList, setAdvocatesList] = useState<Advocate[]>(INITIAL_ADVOCATES);
+
+  useEffect(() => {
+    async function loadAdvocates() {
+      try {
+        const data = await apiGetAdvocates();
+        if (data && data.length > 0) {
+          setAdvocatesList(data);
+        }
+      } catch (e) {
+        // fallback to INITIAL_ADVOCATES
+      }
+    }
+    loadAdvocates();
+  }, []);
 
   const courtLevels = [
     { id: 'All', label: language === 'en' ? 'All Courts' : 'सभी न्यायालय' },
@@ -85,7 +101,7 @@ export function AdvocateDiscoveryPage({
 
   // Filter Advocates
   const filteredAdvocates = useMemo(() => {
-    return INITIAL_ADVOCATES.filter((adv) => {
+    return advocatesList.filter((adv) => {
       // 1. Search filter
       if (searchTerm.trim()) {
         const query = searchTerm.toLowerCase();

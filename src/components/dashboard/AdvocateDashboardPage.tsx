@@ -9,6 +9,8 @@ import {
 import { Language, AppRoute, AuthUser } from '../../types';
 import { AnimatedGlassBackground } from '../AnimatedGlassBackground';
 import { AiAssistantPage } from '../citizen/AiAssistantPage';
+import { apiGetAdvocateProfile, apiUpdateAdvocateProfile } from '../../services/apiClient';
+import { saveStoredUser } from '../../data/portalData';
 import logoImg from '../../assets/images/nyaay_sarathi_logo_1787153284213.jpg';
 
 interface ConsultationRequest {
@@ -185,17 +187,81 @@ export function AdvocateDashboardPage({
   // Manage Profile Modal State
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [profileData, setProfileData] = useState({
-    name: user.name || 'Adv. Vikram Sharma',
-    email: user.email || 'adv.vikram.sharma@delhibar.org',
-    barEnrollment: user.barEnrollment || 'D/1842/2016',
+    name: user.name || '',
+    email: user.email || '',
+    barEnrollment: user.barEnrollment || '',
     stateBarCouncil: user.stateBarCouncil || 'Bar Council of Delhi',
-    experience: user.experience || '8+ Years',
-    courts: user.courts || 'Delhi High Court & Supreme Court of India',
-    languages: user.languages || 'English, Hindi, Punjabi',
-    consultationFee: user.consultationFee || '₹800 / Session',
-    phone: user.phone || '+91 98112 34567',
+    experience: user.experience || '5+ Years',
+    courts: user.courts || 'District Court & High Court',
+    languages: user.languages || 'English, Hindi',
+    consultationFee: typeof (user as any).consultationFee === 'number'
+      ? (user as any).consultationFee
+      : (parseInt(String(user.consultationFee || '500').replace(/[^0-9]/g, ''), 10) || 500),
+    consultationDuration: (user as any).consultationDuration || '30 mins',
+    phone: user.phone || '',
+    practiceAreas: user.practiceAreas || ['Civil Law', 'Consumer Disputes'],
+    city: user.city || '',
+    state: user.state || '',
   });
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileError, setProfileError] = useState<string | null>(null);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [saveToast, setSaveToast] = useState<string | null>(null);
+
+  // Authoritatively fetch authenticated advocate's actual PostgreSQL database record
+  useEffect(() => {
+    let isMounted = true;
+    async function loadAdvocateProfile() {
+      if (!user?.id) return;
+      setProfileLoading(true);
+      setProfileError(null);
+
+      try {
+        const res = await apiGetAdvocateProfile(user.id);
+        if (isMounted && res && res.advocate) {
+          const adv = res.advocate;
+          const u = res.user;
+          const rawFee = adv.consultationFee;
+          const numFee = typeof rawFee === 'number'
+            ? rawFee
+            : (parseInt(String(rawFee || '500').replace(/[^0-9]/g, ''), 10) || 500);
+          const durStr = adv.consultationDuration || '30 mins';
+          const langStr = Array.isArray(adv.languages)
+            ? adv.languages.join(', ')
+            : (adv.languages || '');
+
+          setProfileData({
+            name: adv.name || u.name || user.name || '',
+            email: adv.email || u.email || user.email || '',
+            barEnrollment: adv.barEnrollment || user.barEnrollment || '',
+            stateBarCouncil: adv.stateBarCouncil || user.stateBarCouncil || 'Bar Council of Delhi',
+            experience: adv.experience || user.experience || '5+ Years',
+            courts: adv.courts || user.courts || 'District Court & High Court',
+            languages: langStr || user.languages || 'English, Hindi',
+            consultationFee: numFee,
+            consultationDuration: durStr,
+            phone: adv.phone || u.phone || user.phone || '',
+            practiceAreas: adv.practiceAreas || user.practiceAreas || ['Civil Law'],
+            city: adv.city || u.city || user.city || '',
+            state: adv.state || u.state || user.state || '',
+          });
+        }
+      } catch (err: any) {
+        console.error('[AdvocateDashboard] Error loading profile from database:', err);
+        if (isMounted) {
+          setProfileError(err.message || 'Unable to load profile from database');
+        }
+      } finally {
+        if (isMounted) {
+          setProfileLoading(false);
+        }
+      }
+    }
+
+    loadAdvocateProfile();
+    return () => { isMounted = false; };
+  }, [user.id]);
 
   // BNS Search State
   const [bnsQuery, setBnsQuery] = useState('');
@@ -294,13 +360,79 @@ export function AdvocateDashboardPage({
     );
   });
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaveToast(language === 'en' ? 'Profile details updated successfully!' : 'प्रोफ़ाइल विवरण सफलतापूर्वक अपडेट किया गया!');
-    setTimeout(() => {
-      setSaveToast(null);
-      setProfileModalOpen(false);
-    }, 1200);
+    setSaveError(null);
+    setSaveLoading(true);
+
+    try {
+      const parsedFee = Number(profileData.consultationFee) || 500;
+      const durationStr = profileData.consultationDuration || '30 mins';
+
+      const res = await apiUpdateAdvocateProfile(user.id, {
+        name: profileData.name,
+        email: profileData.email,
+        phone: profileData.phone,
+        barEnrollment: profileData.barEnrollment,
+        stateBarCouncil: profileData.stateBarCouncil,
+        experience: profileData.experience,
+        courts: profileData.courts,
+        consultationFee: parsedFee,
+        consultationDuration: durationStr,
+        languages: profileData.languages,
+        practiceAreas: profileData.practiceAreas,
+        city: profileData.city,
+        state: profileData.state,
+      });
+
+      if (res && res.advocate) {
+        const adv = res.advocate;
+        const updatedFee = typeof adv.consultationFee === 'number' ? adv.consultationFee : parsedFee;
+        const updatedDur = adv.consultationDuration || durationStr;
+
+        const updatedData = {
+          ...profileData,
+          name: adv.name || profileData.name,
+          email: adv.email || profileData.email,
+          phone: adv.phone || profileData.phone,
+          barEnrollment: adv.barEnrollment || profileData.barEnrollment,
+          stateBarCouncil: adv.stateBarCouncil || profileData.stateBarCouncil,
+          experience: adv.experience || profileData.experience,
+          courts: adv.courts || profileData.courts,
+          consultationFee: updatedFee,
+          consultationDuration: updatedDur,
+          city: adv.city || profileData.city,
+          state: adv.state || profileData.state,
+        };
+        setProfileData(updatedData);
+
+        // Sync local storage so other tabs and components reflect updated details
+        const updatedUser: AuthUser = {
+          ...user,
+          name: updatedData.name,
+          phone: updatedData.phone,
+          barEnrollment: updatedData.barEnrollment,
+          stateBarCouncil: updatedData.stateBarCouncil,
+          experience: updatedData.experience,
+          courts: updatedData.courts,
+          consultationFee: `₹${updatedFee} / ${updatedDur}`,
+          city: updatedData.city,
+          state: updatedData.state,
+        };
+        saveStoredUser(updatedUser);
+      }
+
+      setSaveToast(language === 'en' ? 'Profile details updated successfully!' : 'प्रोफ़ाइल विवरण सफलतापूर्वक अपडेट किया गया!');
+      setTimeout(() => {
+        setSaveToast(null);
+        setProfileModalOpen(false);
+      }, 1200);
+    } catch (err: any) {
+      console.error('Failed to save profile changes:', err);
+      setSaveError(err.message || (language === 'en' ? 'Failed to save profile changes' : 'प्रोफ़ाइल विवरण सहेजने में विफल'));
+    } finally {
+      setSaveLoading(false);
+    }
   };
 
   return (
@@ -459,7 +591,7 @@ export function AdvocateDashboardPage({
                 {/* Avatar Icon / Initials */}
                 <div className="relative">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-sky-600 to-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs border border-sky-300">
-                    {profileData.name.replace('Adv.', '').trim().slice(0, 2).toUpperCase() || 'VS'}
+                    {profileData.name ? profileData.name.replace(/^Adv\.?\s*/i, '').trim().slice(0, 2).toUpperCase() : 'AD'}
                   </div>
                   <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full" title="Online & Verified" />
                 </div>
@@ -564,6 +696,16 @@ export function AdvocateDashboardPage({
          ======================================================== */}
       <main className="max-w-7xl mx-auto w-full p-4 sm:p-6 md:p-8 space-y-6">
         
+        {/* Controlled Error Alert if Advocate Profile is missing from DB */}
+        {profileError && (
+          <div className="p-4 bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm rounded-2xl font-semibold flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
+              <span>{profileError}</span>
+            </div>
+          </div>
+        )}
+
         {/* Top Banner: Advocate Status & Quick Stats */}
         <div className="bg-white rounded-3xl p-6 sm:p-7 border border-sky-100 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-2">
@@ -589,8 +731,8 @@ export function AdvocateDashboardPage({
 
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-3xl">
               {language === 'en'
-                ? `Enrolled with ${profileData.stateBarCouncil}. Practice: Criminal Defense, Cyber Laws, Real Estate & Consumer Disputes • Admitted to ${profileData.courts}.`
-                : `${profileData.stateBarCouncil} के साथ पंजीकृत। अभ्यास: आपराधिक कानून, साइबर अपराध, उपभोक्ता विवाद व रियल एस्टेट।`}
+                ? `Enrolled with ${profileData.stateBarCouncil || 'State Bar Council'}. Practice: ${Array.isArray(profileData.practiceAreas) && profileData.practiceAreas.length > 0 ? profileData.practiceAreas.join(', ') : 'Civil, Criminal & Constitutional Law'} • Admitted to ${profileData.courts || 'District & High Courts'}.`
+                : `${profileData.stateBarCouncil || 'राज्य बार काउंसिल'} के साथ पंजीकृत। अभ्यास: ${Array.isArray(profileData.practiceAreas) && profileData.practiceAreas.length > 0 ? profileData.practiceAreas.join(', ') : 'आपराधिक व दीवानी कानून'} • न्यायालय: ${profileData.courts || 'जिला एवं उच्च न्यायालय'}।`}
             </p>
           </div>
 
@@ -606,7 +748,12 @@ export function AdvocateDashboardPage({
             </div>
             <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-slate-200/90 text-center min-w-[100px] sm:min-w-[115px]">
               <p className="text-xs text-slate-500 font-semibold">{language === 'en' ? 'Fee / Slot' : 'शुल्क'}</p>
-              <p className="text-lg sm:text-xl font-bold text-slate-800 mt-1 font-mono">{profileData.consultationFee.split('/')[0]}</p>
+              <p className="text-lg sm:text-xl font-bold text-slate-800 mt-1 font-mono">
+                ₹{Number(profileData.consultationFee || 500).toLocaleString('en-IN')}
+              </p>
+              <p className="text-[10px] text-slate-500 font-semibold mt-0.5">
+                / {profileData.consultationDuration || '30 mins'}
+              </p>
             </div>
           </div>
         </div>
@@ -1362,13 +1509,21 @@ export function AdvocateDashboardPage({
               </div>
             )}
 
-            <form onSubmit={handleSaveProfile} className="space-y-3.5 text-xs">
+            {saveError && (
+              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl font-bold flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                <span>{saveError}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleSaveProfile} className="space-y-3.5 text-xs max-h-[75vh] overflow-y-auto pr-1">
               
               <div>
                 <label className="block font-bold text-slate-700 mb-1">
                   {language === 'en' ? 'Full Advocate Name' : 'अधिवक्ता का पूरा नाम'}
                 </label>
                 <input
+                  id="adv-profile-name"
                   type="text"
                   value={profileData.name}
                   onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
@@ -1379,12 +1534,41 @@ export function AdvocateDashboardPage({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">
+                    {language === 'en' ? 'Email Address' : 'ईमेल पता'}
+                  </label>
+                  <input
+                    id="adv-profile-email"
+                    type="email"
+                    value={profileData.email}
+                    onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-semibold focus:ring-2 focus:ring-sky-500/20"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    {language === 'en' ? 'Phone / Mobile' : 'फ़ोन / मोबाइल'}
+                  </label>
+                  <input
+                    id="adv-profile-phone"
+                    type="tel"
+                    value={profileData.phone}
+                    onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-semibold focus:ring-2 focus:ring-sky-500/20"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
                     {language === 'en' ? 'Bar Enrollment No.' : 'बार पंजीकरण संख्या'}
                   </label>
                   <input
+                    id="adv-profile-bar-id"
                     type="text"
                     value={profileData.barEnrollment}
-                    onChange={(e) => setProfileData({ ...profileData, barEnrollment: e.target.value })}
+                    onChange={(e) => setProfileData({ ...profileData, barEnrollment: e.target.value.toUpperCase() })}
                     className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-mono font-bold focus:ring-2 focus:ring-sky-500/20"
                   />
                 </div>
@@ -1394,6 +1578,7 @@ export function AdvocateDashboardPage({
                     {language === 'en' ? 'State Bar Council' : 'राज्य बार काउंसिल'}
                   </label>
                   <input
+                    id="adv-profile-bar-council"
                     type="text"
                     value={profileData.stateBarCouncil}
                     onChange={(e) => setProfileData({ ...profileData, stateBarCouncil: e.target.value })}
@@ -1405,24 +1590,90 @@ export function AdvocateDashboardPage({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">
-                    {language === 'en' ? 'Consultation Fee' : 'परामर्श शुल्क'}
+                    {language === 'en' ? 'City / Practice Location' : 'शहर / स्थान'}
                   </label>
                   <input
+                    id="adv-profile-city"
                     type="text"
+                    value={profileData.city}
+                    onChange={(e) => setProfileData({ ...profileData, city: e.target.value })}
+                    placeholder="e.g. New Delhi"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-semibold focus:ring-2 focus:ring-sky-500/20"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    {language === 'en' ? 'State' : 'राज्य'}
+                  </label>
+                  <input
+                    id="adv-profile-state"
+                    type="text"
+                    value={profileData.state}
+                    onChange={(e) => setProfileData({ ...profileData, state: e.target.value })}
+                    placeholder="e.g. Delhi"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-semibold focus:ring-2 focus:ring-sky-500/20"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    {language === 'en' ? 'Consultation Fee (₹ INR)' : 'परामर्श शुल्क (₹)'}
+                  </label>
+                  <input
+                    id="adv-profile-fee"
+                    type="number"
+                    min="0"
+                    step="50"
                     value={profileData.consultationFee}
-                    onChange={(e) => setProfileData({ ...profileData, consultationFee: e.target.value })}
+                    onChange={(e) => setProfileData({ ...profileData, consultationFee: Number(e.target.value) || 0 })}
                     className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-bold focus:ring-2 focus:ring-sky-500/20"
                   />
                 </div>
 
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">
+                    {language === 'en' ? 'Consultation Duration' : 'परामर्श अवधि'}
+                  </label>
+                  <select
+                    id="adv-profile-duration"
+                    value={profileData.consultationDuration}
+                    onChange={(e) => setProfileData({ ...profileData, consultationDuration: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-semibold focus:ring-2 focus:ring-sky-500/20"
+                  >
+                    <option value="15 mins">15 mins</option>
+                    <option value="30 mins">30 mins</option>
+                    <option value="45 mins">45 mins</option>
+                    <option value="60 mins">60 mins</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
                     {language === 'en' ? 'Experience' : 'अनुभव'}
                   </label>
                   <input
+                    id="adv-profile-experience"
                     type="text"
                     value={profileData.experience}
                     onChange={(e) => setProfileData({ ...profileData, experience: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-semibold focus:ring-2 focus:ring-sky-500/20"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    {language === 'en' ? 'Courts of Practice' : 'अभ्यास न्यायालय'}
+                  </label>
+                  <input
+                    id="adv-profile-courts"
+                    type="text"
+                    value={profileData.courts}
+                    onChange={(e) => setProfileData({ ...profileData, courts: e.target.value })}
                     className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-semibold focus:ring-2 focus:ring-sky-500/20"
                   />
                 </div>
@@ -1430,12 +1681,14 @@ export function AdvocateDashboardPage({
 
               <div>
                 <label className="block font-bold text-slate-700 mb-1">
-                  {language === 'en' ? 'Courts of Practice' : 'अभ्यास न्यायालय'}
+                  {language === 'en' ? 'Languages' : 'भाषाएं'}
                 </label>
                 <input
+                  id="adv-profile-languages"
                   type="text"
-                  value={profileData.courts}
-                  onChange={(e) => setProfileData({ ...profileData, courts: e.target.value })}
+                  value={profileData.languages}
+                  onChange={(e) => setProfileData({ ...profileData, languages: e.target.value })}
+                  placeholder="e.g. English, Hindi"
                   className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-semibold focus:ring-2 focus:ring-sky-500/20"
                 />
               </div>
@@ -1450,9 +1703,12 @@ export function AdvocateDashboardPage({
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold cursor-pointer shadow-xs"
+                  disabled={saveLoading}
+                  className="px-5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 disabled:opacity-60 text-white font-bold cursor-pointer shadow-xs transition-opacity"
                 >
-                  {language === 'en' ? 'Save Changes' : 'सहेजें'}
+                  {saveLoading 
+                    ? (language === 'en' ? 'Saving...' : 'सहेज रहे हैं...') 
+                    : (language === 'en' ? 'Save Changes' : 'सहेजें')}
                 </button>
               </div>
 

@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { Language, AppRoute, Advocate, Appointment, Application, AuthUser } from '../../types';
 import { saveAppointment, saveApplication } from '../../data/portalData';
+import { apiCreateAppointment, apiCreateApplication } from '../../services/apiClient';
 import { AppointmentBookingConfirmationModal } from './AppointmentBookingConfirmationModal';
 import { AdvocateResponseTimer } from './AdvocateResponseTimer';
 
@@ -152,8 +153,10 @@ export function AppointmentBookingFlow({
       updatedAt: nowIso,
     };
 
-    saveAppointment(newAppointment);
-    saveApplication(newApplication);
+    // Persist to PostgreSQL database and local sync
+    apiCreateAppointment(newAppointment);
+    apiCreateApplication(newApplication);
+
     setConfirmedAppointment(newAppointment);
     setShowConfirmationModal(true);
     setCurrentStep(8);

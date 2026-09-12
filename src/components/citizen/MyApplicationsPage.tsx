@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   FileText, CheckCircle2, Clock, AlertCircle, ArrowRight, 
   Search, ShieldCheck, ChevronRight, Copy, Check, ExternalLink,
@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { Language, AppRoute, Application } from '../../types';
 import { getStoredApplications } from '../../data/portalData';
+import { apiGetApplications } from '../../services/apiClient';
 
 interface MyApplicationsPageProps {
   language: Language;
@@ -21,6 +22,20 @@ export function MyApplicationsPage({
   const [copiedDraft, setCopiedDraft] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    async function loadApplications() {
+      try {
+        const serverApps = await apiGetApplications();
+        if (serverApps && serverApps.length > 0) {
+          setApplications(serverApps);
+        }
+      } catch (e) {
+        // use local fallback
+      }
+    }
+    loadApplications();
+  }, []);
 
   // Calculate statistics
   const totalCount = applications.length;

@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { Language, AppRoute, Appointment } from '../../types';
 import { getStoredAppointments, updateAppointmentStatus, saveAppointment } from '../../data/portalData';
+import { apiGetAppointments, apiUpdateAppointmentStatus, apiCreateAppointment } from '../../services/apiClient';
 import { AdvocateResponseTimer } from './AdvocateResponseTimer';
 
 interface MyAppointmentsPageProps {
@@ -25,7 +26,16 @@ export function MyAppointmentsPage({
   const [newTime, setNewTime] = useState('04:00 PM');
   const [cancelModalApt, setCancelModalApt] = useState<Appointment | null>(null);
 
-  const refreshAppointments = () => {
+  const refreshAppointments = async () => {
+    try {
+      const serverApts = await apiGetAppointments();
+      if (serverApts && serverApts.length > 0) {
+        setAppointments(serverApts);
+        return;
+      }
+    } catch (e) {
+      // fallback
+    }
     setAppointments(getStoredAppointments());
   };
 
@@ -48,7 +58,8 @@ export function MyAppointmentsPage({
 
   const handleCancel = (apt: Appointment) => {
     updateAppointmentStatus(apt.id, 'cancelled');
-    setAppointments(getStoredAppointments());
+    apiUpdateAppointmentStatus(apt.id, 'cancelled');
+    setAppointments(prev => prev.map(a => a.id === apt.id ? { ...a, status: 'cancelled' } : a));
     setCancelModalApt(null);
   };
 
@@ -62,7 +73,8 @@ export function MyAppointmentsPage({
       createdAt: new Date().toISOString(),
     };
     saveAppointment(updated);
-    setAppointments(getStoredAppointments());
+    apiCreateAppointment(updated);
+    setAppointments(prev => prev.map(a => a.id === updated.id ? updated : a));
     setRescheduleModalApt(null);
   };
 
