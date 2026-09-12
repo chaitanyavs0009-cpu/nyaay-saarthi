@@ -48,11 +48,11 @@ export function CitizenDashboardPage({
               onClick={() => onNavigate('home')}
               className="flex items-center gap-2.5 cursor-pointer select-none"
             >
-              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white border border-sky-100 p-0.5 shadow-sm overflow-hidden">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white border border-sky-100 p-0.5 shadow-sm overflow-hidden flex items-center justify-center">
                 <img 
                   src={logoImg} 
                   alt="Nyaay Sarthi Logo" 
-                  className="w-full h-full object-cover rounded-xl"
+                  className="w-full h-full object-contain scale-[1.36]" 
                   referrerPolicy="no-referrer"
                 />
               </div>

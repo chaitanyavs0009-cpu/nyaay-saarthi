@@ -24,7 +24,7 @@ export function Footer({ language, onActionClick }: FooterProps) {
               <img 
                 src={logoImg} 
                 alt="Nyaay Sarthi Logo" 
-                className="w-full h-full object-cover rounded-xl"
+                className="w-full h-full object-contain scale-[1.36]"
                 referrerPolicy="no-referrer"
               />
             </div>

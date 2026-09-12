@@ -15,12 +15,14 @@ export function HeroSection({ language, onActionClick }: HeroSectionProps) {
         {/* Main Headline */}
         <div className="text-center max-w-4xl mx-auto mb-10 pt-2">
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/70 backdrop-blur-md border border-white/85 text-sky-900 text-xs sm:text-sm font-semibold mb-5 shadow-[0_4px_16px_rgba(31,38,135,0.06)]">
-            <img 
-              src={logoImg} 
-              alt="Nyaay Sarthi" 
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover shadow-sm ring-1 ring-sky-300/60" 
-              referrerPolicy="no-referrer"
-            />
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden shrink-0 shadow-sm ring-1 ring-sky-300/60 bg-white flex items-center justify-center">
+              <img 
+                src={logoImg} 
+                alt="Nyaay Sarthi" 
+                className="w-full h-full object-contain scale-[1.36]" 
+                referrerPolicy="no-referrer"
+              />
+            </div>
             <span>{language === 'en' ? 'Digital Legal Empowerment Platform' : 'डिजिटल कानूनी सशक्तिकरण मंच'}</span>
           </div>
 
@@ -69,7 +71,7 @@ export function HeroSection({ language, onActionClick }: HeroSectionProps) {
               <img 
                 src={logoImg} 
                 alt="Nyaay Sarthi" 
-                className="w-full h-full object-cover rounded-2xl"
+                className="w-full h-full object-contain scale-[1.36]"
                 referrerPolicy="no-referrer"
               />
             </div>

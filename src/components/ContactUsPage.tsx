@@ -320,11 +320,11 @@ export function ContactUsPage({
                 onClick={onBackToHome}
                 className="cursor-pointer hidden sm:flex items-center gap-2.5 select-none pl-2 border-l border-white/80"
               >
-                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/95 border border-white/90 p-0.5 shadow-sm overflow-hidden">
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/95 border border-white/90 p-0.5 shadow-sm overflow-hidden flex items-center justify-center">
                   <img 
                     src={logoImg} 
                     alt="Nyaay Sarthi Logo" 
-                    className="w-full h-full object-cover rounded-xl"
+                    className="w-full h-full object-contain scale-[1.36]" 
                     referrerPolicy="no-referrer"
                   />
                 </div>

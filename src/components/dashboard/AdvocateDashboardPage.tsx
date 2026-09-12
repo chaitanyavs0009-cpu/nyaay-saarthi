@@ -322,11 +322,11 @@ export function AdvocateDashboardPage({
               }}
               className="flex items-center gap-3 cursor-pointer select-none group"
             >
-              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-sky-50 border border-sky-200 p-0.5 shadow-sm overflow-hidden group-hover:scale-105 transition-transform">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-sky-50 border border-sky-200 p-0.5 shadow-sm overflow-hidden group-hover:scale-105 transition-transform flex items-center justify-center">
                 <img 
                   src={logoImg} 
                   alt="Nyaay Sarthi Logo" 
-                  className="w-full h-full object-cover rounded-xl"
+                  className="w-full h-full object-contain scale-[1.36]" 
                   referrerPolicy="no-referrer"
                 />
               </div>
