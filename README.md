@@ -1,8 +1,8 @@
-# Nyaay सारथी ⚖️
+# Nyaay Sarthi ⚖️
 
 ### Digital Legal Awareness, Guidance & Advocate Connect Platform
 
-> **Nyaay सारथी** is a modern Indian civic-tech platform designed to
+> **Nyaay Sarthi** is a modern Indian civic-tech platform designed to
 > make legal information easier to understand and access. It connects
 > citizens with legal-awareness resources, AI-assisted guidance,
 > advocates, appointments, applications, and case-related activity in
@@ -14,7 +14,7 @@
 
 ## 📌 Overview
 
-Nyaay सारथी is built around a simple idea:
+Nyaay Sarthi is built around a simple idea:
 
 **Make legal awareness understandable, make the next step clearer, and
 make professional legal assistance easier to reach.**
@@ -51,7 +51,7 @@ Traditional legal information can be difficult to understand because of
 complex terminology, scattered resources, and limited access to
 professional guidance.
 
-### Nyaay सारथी addresses this gap by bringing these capabilities together in a single digital platform.
+### Nyaay Sarthi addresses this gap by bringing these capabilities together in a single digital platform.
 
 ------------------------------------------------------------------------
 
@@ -141,13 +141,13 @@ Route:
 /chat
 ```
 
-The AI assistant is one of the core features of Nyaay सारथी.
+The AI assistant is one of the core features of Nyaay Sarthi.
 
 ### Opening Experience
 
 The interface introduces the assistant with:
 
-> **How can Nyaay सारथी help you today?**
+> **How can Nyaay Sarthi help you today?**
 
 Users can describe their issue naturally in simple language.
 
@@ -197,7 +197,7 @@ without knowing how to phrase a legal question.
 
 ### Important AI Limitation
 
-Nyaay सारथी should **not** be represented as an AI lawyer.
+Nyaay Sarthi should **not** be represented as an AI lawyer.
 
 AI-generated information is intended for general legal awareness and
 procedural guidance. Users should consult a qualified advocate for
@@ -248,7 +248,7 @@ Each right/resource can provide:
 
 The rights experience connects users back to the AI assistant through:
 
-**Talk to Nyaay सारथी**
+**Talk to Nyaay Sarthi**
 
 The underlying architecture can later be extended into a verified legal
 RAG system using official government and legal sources.
@@ -343,7 +343,7 @@ applications remain easy to scan.
 
 # ⚖️ Advocate Portal
 
-Nyaay सारथी also provides a dedicated advocate experience.
+Nyaay Sarthi also provides a dedicated advocate experience.
 
 ### Advocate Navigation
 
@@ -500,7 +500,7 @@ versions.
 
 # 🎨 UI / UX Design
 
-Nyaay सारथी uses a consistent visual language across public, citizen,
+Nyaay Sarthi uses a consistent visual language across public, citizen,
 and advocate experiences.
 
 ### Design Direction
@@ -529,7 +529,7 @@ rather than looking like a generic AI chatbot.
 # 🧭 Main Application Flow
 
 ``` text
-                    Nyaay सारथी
+                    Nyaay Sarthi
                          │
              ┌───────────┴───────────┐
              │                       │
@@ -824,7 +824,7 @@ Recommended protections include:
 
 # ⚖️ Legal & AI Disclaimer
 
-Nyaay सारथी is a **legal awareness and assistance platform**.
+Nyaay Sarthi is a **legal awareness and assistance platform**.
 
 It does not replace:
 
@@ -913,7 +913,7 @@ The platform can later be extended into Android/iOS applications.
 
 # 🌱 Social Impact
 
-Nyaay सारथी aims to contribute toward:
+Nyaay Sarthi aims to contribute toward:
 
 -   Better legal awareness
 -   Easier access to information
@@ -990,7 +990,7 @@ Create a Pull Request with:
 
 # 👥 Project
 
-**Nyaay सारथी --- Digital Legal Awareness & Guidance**
+**Nyaay Sarthi --- Digital Legal Awareness & Guidance**
 
 > **Your Trusted Guide for Lawyer Consultation, Legal Clarity, Rights &
 > Justice.**
